@@ -1,0 +1,38 @@
+[package]
+name = "binary-options-tools-core"
+version = "0.1.7"
+edition = "2024"
+authors = ["ChipaDevTeam"]
+repository = "https://github.com/ChipaDevTeam/BinaryOptionsTools-v2"
+homepage = "https://chipadevteam.github.io/BinaryOptionsTools-v2/"
+documentation = "https://chipadevteam.github.io/BinaryOptionsTools-v2/"
+readme = "readme.md"
+description = "Core library for binary options trading tools. Provides WebSocket client implementation, message handling, and async runtime management for the binary-options-tools ecosystem."
+keywords = ["binary-options", "websocket", "trading", "core", "async"]
+categories = ["asynchronous", "network-programming", "api-bindings"]
+license-file = "../../LICENSE"
+
+[features]
+
+[dependencies]
+binary-options-tools-macros = { path = "../macros", version = "0.1.3" }
+
+anyhow = "1.0.98"
+async-channel = "2.3.1"
+async-trait = "0.1.88"
+chrono = { version = "0.4.41", features = ["serde"] }
+futures-util = "0.3.31"
+php_serde = "0.6.0"
+pin-project-lite = "0.2.16"
+rand = "0.9.1"
+reqwest = { version = "0.12.15", features = ["json"] }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = { version = "1.0.140", features = [] }
+thiserror = "2.0.12"
+tokio = { version = "1.44.2", features = ["macros", "io-util", "rt", "sync"] }
+tokio-tungstenite = { version = "0.27.0", features = ["native-tls"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["json"] }
+url = { version = "2.5.4", features = ["serde"] }
+uuid = { version = "1.16.0", features = ["serde"] }
+tracing-appender = "0.2.3"
