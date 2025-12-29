@@ -1,0 +1,62 @@
+# Build Python wheels with maturin on ubuntu-latest and upload as artifacts
+name: Build Python wheels
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+env:
+  PROJECT_DIR: BinaryOptionsToolsV2  # <-- change this if your project folder name differs
+
+jobs:
+  build-wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+
+      - name: Install system build deps (apt)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential pkg-config libssl-dev python3-dev python3-pip curl ca-certificates git
+          sudo rm -rf /var/lib/apt/lists/*
+
+      - name: Ensure pip up-to-date and install maturin
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install "maturin>=1.7,<2.0"
+
+      - name: Print versions (debug)
+        run: |
+          python --version
+          rustc --version
+          cargo --version
+
+      - name: Build wheel(s) with maturin
+        run: |
+          cd "${{ env.PROJECT_DIR }}"
+          maturin build --release
+
+      - name: List produced wheels
+        run: ls -la "${{ env.PROJECT_DIR }}/target/wheels" || true
+
+      - name: Upload wheels artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels
+          path: ${{ env.PROJECT_DIR }}/target/wheels/*.whl
